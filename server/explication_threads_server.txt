@@ -1,0 +1,37 @@
+Dans votre programme, la fonction principale (`main`) initialise un serveur et lance plusieurs threads pour exécuter le contexte d'entrée/sortie (I/O) d'ASIO. Voici comment cela se déroule :
+
+1. **Initialisation du Serveur** :
+   - Dans `main`, un objet `Server` est créé et initialisé avec le contexte I/O d'ASIO, le port du serveur et le numéro de vague. Le constructeur de `Server` configure le serveur pour commencer à recevoir des données.
+
+2. **Lancement des Threads d'ASIO** :
+   - Après l'initialisation du serveur, un ensemble de threads est créé. Chacun de ces threads appelle `io_context.run()`. Cette méthode est le cœur du modèle d'asynchronisme d'ASIO. Elle exécute le contexte d'I/O, gérant les événements d'I/O asynchrones.
+
+3. **Fonctionnalité Asynchrone** :
+   - `start_receive` dans la classe `Server` configure une opération de réception asynchrone avec `socket_.async_receive_from`. Cette méthode demande au contexte I/O d'ASIO de notifier le serveur lorsqu'une nouvelle donnée arrive.
+   - Lorsque des données sont reçues, la fonction de rappel (callback) spécifiée dans `async_receive_from` est invoquée. Dans votre cas, elle appelle `handle_receive`, qui traite les messages reçus.
+
+4. **Traitement Multithread des Requêtes** :
+   - Étant donné que plusieurs threads exécutent `io_context.run()`, ASIO distribue les tâches entrantes (comme les appels à `handle_receive`) parmi ces threads. Cela signifie que les requêtes entrantes peuvent être traitées en parallèle, selon la disponibilité des threads.
+
+5. **Synchronisation** :
+   - À l'intérieur de `handle_receive`, vous utilisez `clients_mutex_` pour synchroniser l'accès aux données partagées. Cela garantit que même si plusieurs threads traitent `handle_receive` en parallèle, ils accèdent et modifient les données partagées (`client_ids_`, etc.) de manière thread-safe.
+
+En résumé, votre serveur utilise le multithreading pour traiter les requêtes entrantes en parallèle, mais utilise des mutex pour s'assurer que l'accès aux données partagées est sécurisé et cohérent. Cela permet au serveur de gérer efficacement les requêtes simultanées tout en protégeant les données partagées contre les problèmes de concurrence.
+
+
+logs pour montrer que cela fonctionne:
+Received message: FAKE MSG from 127.0.0.1:58690
+handle_receive called from thread: 139709219096320
+Trying to lock clients_mutex_ from thread: 139709219096320
+A client tried to send a message but he is not in our list and he didn't say START
+clients_mutex_ unlocked by thread: 139709219096320
+Received message: START from 127.0.0.1:58690
+handle_receive called from thread: 139709277845248
+Trying to lock clients_mutex_ from thread: 139709277845248
+New client added with ID: 1
+clients_mutex_ unlocked by thread: 139709277845248
+Received message: QUIT from 127.0.0.1:58690
+handle_receive called from thread: 139709193918208
+Trying to lock clients_mutex_ from thread: 139709193918208
+Client 1 disconnected, clients left: 0
+clients_mutex_ unlocked by thread: 139709193918208

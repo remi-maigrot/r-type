@@ -1,0 +1,24 @@
+# Build output
+build/
+cmake-build-*/
+*.o
+r-type_server
+r-type_server.exe
+r-type_client
+r-type_client.exe
+a.out
+
+# Release archives produced by build.sh / build.bat
+r_type_*.zip
+
+# Runtime logs
+log.txt
+
+# Local notes
+notes
+
+# OS / editors
+.DS_Store
+.vscode/
+.vs/
+.idea/
