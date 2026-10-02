@@ -59,6 +59,8 @@ ECS/      components/     Position, Speed, Health, Damages, HitBox, ShootCooldow
 assets/   sprites, fonts, music and sound effects
 ```
 
+Detailed documentation (server, game engine, client and client–server protocol) is available on [Notion](https://opalescent-crab-ddf.notion.site/R-Type-f91eb3655a224788a63274d78887f703?pvs=4).
+
 ## Build & Run
 
 Requirements: CMake 3.10+, a C++17 compiler and SFML 2.5. Asio is downloaded automatically by CMake.
