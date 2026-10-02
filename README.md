@@ -4,11 +4,7 @@ A multiplayer shoot 'em up in C++ with an authoritative, multithreaded UDP game 
 
 ## About
 
-Epitech team project (2023–2024, third year). The goal was to recreate the classic arcade game R-Type as a networked game: several players connect to the same server and fight waves of enemies together. The server owns the whole game simulation (an in-house ECS); clients send their inputs and render the state they receive.
-
-## My role
-
-[À COMPLÉTER PAR RÉMI]
+Built in 2023–2024. The goal was to recreate the classic arcade game R-Type as a networked game: several players connect to the same server and fight waves of enemies together. The server owns the whole game simulation (an in-house ECS); clients send their inputs and render the state they receive.
 
 ## Features
 
